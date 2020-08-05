@@ -4,6 +4,7 @@ import pandas as pd
 from src.utils.timeUtils import getTimeDeltaFromDbStr
 from src.repos.outagesRepo import Outages
 
+
 def fetchOutages(appConfig: dict, startDate: dt.datetime, endDate: dt.datetime) -> Outages:
     """fetches outages from reports database
 
@@ -50,19 +51,30 @@ def fetchOutages(appConfig: dict, startDate: dt.datetime, endDate: dt.datetime) 
     colNames = colNames[0:-2]
     dbRows = cur.fetchall()
     # print(dbRows)
+    instCapIndexInRow: int = 5
     outDateIndexInRow: int = 6
     revDateIndexInRow: int = 7
     for rIter in range(len(dbRows)):
         # convert tuple to list to facilitate manipulation
         dbRows[rIter] = list(dbRows[rIter])
+
+        # convert installed capacity to string
+        instCap = dbRows[rIter][instCapIndexInRow]
+        if not pd.isnull(instCap):
+            instCap = str(instCap)
+            dbRows[rIter][instCapIndexInRow] = instCap
         
+        # TODO if element type is not generating unit, 
+        # then extract voltage level and assign to installed capacity
+
         outageDateTime = dbRows[rIter][outDateIndexInRow]
         if not pd.isnull(outageDateTime):
             # convert string to time delta
             outTimeStr = dbRows[rIter][-2]
             outTimeDelta = getTimeDeltaFromDbStr(outTimeStr)
             # strip off hours and minute components
-            outageDateTime = outageDateTime.replace(hour=0, minute=0, second=0, microsecond=0)
+            outageDateTime = outageDateTime.replace(
+                hour=0, minute=0, second=0, microsecond=0)
             # add out time to out date to get outage timestamp
             outageDateTime += outTimeDelta
             dbRows[rIter][outDateIndexInRow] = outageDateTime
@@ -73,7 +85,8 @@ def fetchOutages(appConfig: dict, startDate: dt.datetime, endDate: dt.datetime) 
             revTimeStr = dbRows[rIter][-2]
             revTimeDelta = getTimeDeltaFromDbStr(revTimeStr)
             # strip off hours and minute components
-            revivalDateTime = revivalDateTime.replace(hour=0, minute=0, second=0, microsecond=0)
+            revivalDateTime = revivalDateTime.replace(
+                hour=0, minute=0, second=0, microsecond=0)
             # add revival time to out date to get revival timestamp
             revivalDateTime += revTimeDelta
             dbRows[rIter][revDateIndexInRow] = revivalDateTime
