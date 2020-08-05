@@ -1,14 +1,8 @@
-from typing import List, Tuple, TypedDict
 import datetime as dt
 import cx_Oracle
 import pandas as pd
 from src.utils.timeUtils import getTimeDeltaFromDbStr
-
-
-class Outages(TypedDict):
-    columns: List[str]
-    rows: List[Tuple]
-
+from src.repos.outagesRepo import Outages
 
 def fetchOutages(appConfig: dict, startDate: dt.datetime, endDate: dt.datetime) -> Outages:
     """fetches outages from reports database
@@ -61,20 +55,28 @@ def fetchOutages(appConfig: dict, startDate: dt.datetime, endDate: dt.datetime) 
     for rIter in range(len(dbRows)):
         # convert tuple to list to facilitate manipulation
         dbRows[rIter] = list(dbRows[rIter])
-
-        if not pd.isnull(dbRows[rIter][outDateIndexInRow]):
+        
+        outageDateTime = dbRows[rIter][outDateIndexInRow]
+        if not pd.isnull(outageDateTime):
             # convert string to time delta
             outTimeStr = dbRows[rIter][-2]
             outTimeDelta = getTimeDeltaFromDbStr(outTimeStr)
+            # strip off hours and minute components
+            outageDateTime = outageDateTime.replace(hour=0, minute=0, second=0, microsecond=0)
             # add out time to out date to get outage timestamp
-            dbRows[rIter][outDateIndexInRow] += outTimeDelta
+            outageDateTime += outTimeDelta
+            dbRows[rIter][outDateIndexInRow] = outageDateTime
 
-        if not pd.isnull(dbRows[rIter][outDateIndexInRow]):
+        revivalDateTime = dbRows[rIter][revDateIndexInRow]
+        if not pd.isnull(revivalDateTime):
             # convert string to time delta
             revTimeStr = dbRows[rIter][-2]
             revTimeDelta = getTimeDeltaFromDbStr(revTimeStr)
+            # strip off hours and minute components
+            revivalDateTime = revivalDateTime.replace(hour=0, minute=0, second=0, microsecond=0)
             # add revival time to out date to get revival timestamp
-            dbRows[rIter][revDateIndexInRow] += revTimeDelta
+            revivalDateTime += revTimeDelta
+            dbRows[rIter][revDateIndexInRow] = revivalDateTime
 
         # remove last 2 column of the row
         dbRows[rIter] = dbRows[rIter][0:-2]

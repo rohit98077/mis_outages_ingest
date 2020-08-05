@@ -12,7 +12,7 @@ class TestFetchOutages(unittest.TestCase):
 
     def test_run(self) -> None:
         """tests the function that fetches the ouatges from reporting software
-        """        
+        """
         startDate = dt.datetime(2019, 10, 20)
         endDate = dt.datetime(2019, 10, 21)
 
