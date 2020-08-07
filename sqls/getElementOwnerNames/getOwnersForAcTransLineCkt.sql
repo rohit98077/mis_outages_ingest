@@ -1,4 +1,4 @@
--- get owner names for given trans line ckts
+-- get owner names for given AC trans line ckts
 select ckt.id as ckt_id,
     ac_line.line_name,
     owner_details.owners
