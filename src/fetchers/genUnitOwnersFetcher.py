@@ -47,6 +47,6 @@ def getOwnersForGenUnitIds(reportsConnStr: str, ids: List[int]) -> Dict[int, str
     ownersDict: Dict[int, str] = {}
     for row in dbRows:
         ownersDict[row[0]] = row[1]
-    print(dbRows)
-    print(ownersDict)
+    # print(dbRows)
+    # print(ownersDict)
     return ownersDict

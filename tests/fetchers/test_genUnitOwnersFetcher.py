@@ -11,7 +11,8 @@ class TestGenUnitOwnersFetcher(unittest.TestCase):
         self.appConfig = getConfig()
 
     def test_run(self) -> None:
-        """tests the function that fetches the ouatges from reporting software
+        """tests the function that fetches the owners of 
+        generating units from reporting software
         """
         elemIds = [4, 6]
         ownersDict = getOwnersForGenUnitIds(self.appConfig['conStr'], elemIds)
