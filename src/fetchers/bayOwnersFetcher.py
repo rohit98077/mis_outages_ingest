@@ -11,7 +11,7 @@ def getOwnersForBayIds(reportsConnStr: str, ids: List[int]) -> Dict[int, str]:
         ids (List[int]): list of Bay ids
 
     Returns:
-        Dict[int, str]: keys will be unit Ids, values will be comma separated owner names
+        Dict[int, str]: keys will be element Ids, values will be comma separated owner names
     """
     # requiredIds in tuple list form
     reqIdsTxt = ','.join(tuple(set([str(x) for x in ids])))

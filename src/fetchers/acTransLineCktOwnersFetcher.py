@@ -11,7 +11,7 @@ def getOwnersForAcTransLineCktIds(reportsConnStr: str, ids: List[int]) -> Dict[i
         ids (List[int]): list of AC Transmission line ckt ids
 
     Returns:
-        Dict[int, str]: keys will be unit Ids, values will be comma separated owner names
+        Dict[int, str]: keys will be element Ids, values will be comma separated owner names
     """
     # requiredIds in tuple list form
     reqIdsTxt = ','.join(tuple(set([str(x) for x in ids])))
