@@ -20,13 +20,28 @@ def createOutageEventsRawData(appConfig: dict, startDate: dt.datetime, endDate: 
     # get the connection string of application db
     localDbConStr = appConfig['localDb']
 
-    # get the instance of outages repository
-    outagesRepo = OutagesRepo(localDbConStr)
+    # set batch size for scalability concerns
+    fetchBatchNumDays = 10
 
-    # fetch outage events from reporting software db
-    outages = fetchOutages(appConfig, startDate, endDate)
+    currDate = startDate
 
-    # insert outages into db via the repository instance
-    isRawDataInsSuccess = outagesRepo.insertOutages(outages)
+    while currDate <= endDate:
+        batchStartDate = currDate
+        batchEndDate = batchStartDate + \
+            dt.timedelta(days=fetchBatchNumDays) - dt.timedelta(seconds=1)
+        if batchEndDate > endDate:
+            batchEndDate = endDate
+        
+        # get the instance of outages repository
+        outagesRepo = OutagesRepo(localDbConStr)
+
+        # fetch outage events from reporting software db
+        outages = fetchOutages(appConfig, batchStartDate, batchEndDate)
+
+        # insert outages into db via the repository instance
+        isRawDataInsSuccess = outagesRepo.insertOutages(outages)
+
+        # update currDate
+        currDate += dt.timedelta(days=fetchBatchNumDays)
 
     return isRawDataInsSuccess
