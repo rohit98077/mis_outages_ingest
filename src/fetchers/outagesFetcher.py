@@ -1,8 +1,20 @@
 import datetime as dt
 import cx_Oracle
 import pandas as pd
-from src.utils.timeUtils import getTimeDeltaFromDbStr
+from typing import Dict
 from src.repos.outagesRepo import Outages
+from src.utils.timeUtils import getTimeDeltaFromDbStr
+from src.fetchers.acTransLineCktOwnersFetcher import getOwnersForAcTransLineCktIds
+from src.fetchers.bayOwnersFetcher import getOwnersForBayIds
+from src.fetchers.busOwnersFetcher import getOwnersForBusIds
+from src.fetchers.busReactorOwnersFetcher import getOwnersForBusReactorIds
+from src.fetchers.compensatorOwnersFetcher import getOwnersForCompensatorIds
+from src.fetchers.fscOwnersFetcher import getOwnersForFscIds
+from src.fetchers.genUnitOwnersFetcher import getOwnersForGenUnitIds
+from src.fetchers.hvdcLineCktOwnersFetcher import getOwnersForHvdcLineCktIds
+from src.fetchers.hvdcPoleOwnersFetcher import getOwnersForHvdcPoleIds
+from src.fetchers.lineReactorOwnersFetcher import getOwnersForLineReactorIds
+from src.fetchers.transformerOwnersFetcher import getOwnersForTransformerIds
 
 
 def fetchOutages(appConfig: dict, startDate: dt.datetime, endDate: dt.datetime) -> Outages:
@@ -21,7 +33,7 @@ def fetchOutages(appConfig: dict, startDate: dt.datetime, endDate: dt.datetime) 
         'CREATED_DATETIME', 'MODIFIED_DATETIME', 'SHUTDOWN_TAG', 
         'SHUTDOWN_TAG_ID', 'SHUTDOWN_TYPENAME', 'SHUT_DOWN_TYPE_ID', 
         'OUTAGE_REMARKS', 'REASON', 'REASON_ID', 'REVIVAL_REMARKS', 
-        'REGION_ID', 'SHUTDOWNREQUEST_ID'
+        'REGION_ID', 'SHUTDOWNREQUEST_ID', 'OWNERS'
     """
     # get the reports connection string
     reportsConnStr = appConfig['conStr']
@@ -49,22 +61,68 @@ def fetchOutages(appConfig: dict, startDate: dt.datetime, endDate: dt.datetime) 
     colNames = [row[0] for row in cur.description]
     # print(colNames)
     colNames = colNames[0:-2]
+    colNames.append('OWNERS')
     dbRows = cur.fetchall()
     # print(dbRows)
     instCapIndexInRow: int = 5
     outDateIndexInRow: int = 6
     revDateIndexInRow: int = 7
+    elemIdIndexInRow: int = 1
+    elemTypeIndexInRow: int = 4
+
+    # initialize owners dictionary
+    acTransLineCktOwners: Dict[int, str] = {}
+    bayOwners: Dict[int, str] = {}
+    busOwners: Dict[int, str] = {}
+    busReactorOwners: Dict[int, str] = {}
+    compensatorOwners: Dict[int, str] = {}
+    fscOwners: Dict[int, str] = {}
+    genUnitOwners: Dict[int, str] = {}
+    hvdcLineCktOwners: Dict[int, str] = {}
+    hvdcPoleOwners: Dict[int, str] = {}
+    lineReactorOwners: Dict[int, str] = {}
+    transfomerOwners: Dict[int, str] = {}
+
+    # iterate through db rows
     for rIter in range(len(dbRows)):
         # convert tuple to list to facilitate manipulation
         dbRows[rIter] = list(dbRows[rIter])
+
+        # get the element Id and element type of outage entry
+        elemId = dbRows[rIter][elemIdIndexInRow]
+        elemType = dbRows[rIter][elemTypeIndexInRow]
+        if elemType == 'AC_TRANSMISSION_LINE_CIRCUIT':
+            acTransLineCktOwners[elemId] = ''
+        elif elemType == 'GENERATING_UNIT':
+            genUnitOwners[elemId] = ''
+        elif elemType == 'GENERATING_UNIT':
+            genUnitOwners[elemId] = ''
+        elif elemType == 'FSC':
+            fscOwners[elemId] = ''
+        elif elemType == 'HVDC_LINE_CIRCUIT':
+            hvdcLineCktOwners[elemId] = ''
+        elif elemType == 'BUS REACTOR':
+            busReactorOwners[elemId] = ''
+        elif elemType == 'LINE_REACTOR':
+            lineReactorOwners[elemId] = ''
+        elif elemType == 'TRANSFORMER':
+            transfomerOwners[elemId] = ''
+        elif elemType == 'HVDC POLE':
+            hvdcPoleOwners[elemId] = ''
+        elif elemType == 'BUS':
+            busOwners[elemId] = ''
+        elif elemType == 'Bay':
+            bayOwners[elemId] = ''
+        elif elemType in ['TCSC', 'FSC', 'MSR', 'MSC', 'STATCOM']:
+            compensatorOwners[elemId] = ''
 
         # convert installed capacity to string
         instCap = dbRows[rIter][instCapIndexInRow]
         if not pd.isnull(instCap):
             instCap = str(instCap)
             dbRows[rIter][instCapIndexInRow] = instCap
-        
-        # TODO if element type is not generating unit, 
+
+        # TODO if element type is not generating unit,
         # then extract voltage level and assign to installed capacity
 
         outageDateTime = dbRows[rIter][outDateIndexInRow]
@@ -93,6 +151,67 @@ def fetchOutages(appConfig: dict, startDate: dt.datetime, endDate: dt.datetime) 
 
         # remove last 2 column of the row
         dbRows[rIter] = dbRows[rIter][0:-2]
+
+    # fetch owners for each type separately
+    acTransLineCktOwners = getOwnersForAcTransLineCktIds(
+        reportsConnStr, list(acTransLineCktOwners.keys()))
+
+    bayOwners = getOwnersForBayIds(reportsConnStr, list(bayOwners.keys()))
+
+    busOwners = getOwnersForBusIds(reportsConnStr, list(busOwners.keys()))
+
+    busReactorOwners = getOwnersForBusReactorIds(
+        reportsConnStr, list(busReactorOwners.keys()))
+
+    compensatorOwners = getOwnersForCompensatorIds(
+        reportsConnStr, list(compensatorOwners.keys()))
+
+    fscOwners = getOwnersForFscIds(reportsConnStr, list(fscOwners.keys()))
+
+    genUnitOwners = getOwnersForGenUnitIds(
+        reportsConnStr, list(genUnitOwners.keys()))
+
+    hvdcLineCktOwners = getOwnersForHvdcLineCktIds(
+        reportsConnStr, list(hvdcLineCktOwners.keys()))
+
+    hvdcPoleOwners = getOwnersForHvdcPoleIds(
+        reportsConnStr, list(hvdcPoleOwners.keys()))
+
+    lineReactorOwners = getOwnersForLineReactorIds(
+        reportsConnStr, list(lineReactorOwners.keys()))
+
+    transfomerOwners = getOwnersForTransformerIds(
+        reportsConnStr, list(transfomerOwners.keys()))
+
+    # iterate through db rows and assign owner string to each row
+    for rIter in range(len(dbRows)):
+        elemId = dbRows[rIter][elemIdIndexInRow]
+        elemType = dbRows[rIter][elemTypeIndexInRow]
+        if elemType == 'AC_TRANSMISSION_LINE_CIRCUIT':
+            dbRows[rIter].append(acTransLineCktOwners[elemId])
+        elif elemType == 'GENERATING_UNIT':
+            dbRows[rIter].append(genUnitOwners[elemId])
+        elif elemType == 'GENERATING_UNIT':
+            dbRows[rIter].append(genUnitOwners[elemId])
+        elif elemType == 'FSC':
+            dbRows[rIter].append(fscOwners[elemId])
+        elif elemType == 'HVDC_LINE_CIRCUIT':
+            dbRows[rIter].append(hvdcLineCktOwners[elemId])
+        elif elemType == 'BUS REACTOR':
+            dbRows[rIter].append(busReactorOwners[elemId])
+        elif elemType == 'LINE_REACTOR':
+            dbRows[rIter].append(lineReactorOwners[elemId])
+        elif elemType == 'TRANSFORMER':
+            dbRows[rIter].append(transfomerOwners[elemId])
+        elif elemType == 'HVDC POLE':
+            dbRows[rIter].append(hvdcPoleOwners[elemId])
+        elif elemType == 'BUS':
+            dbRows[rIter].append(busOwners[elemId])
+        elif elemType == 'Bay':
+            dbRows[rIter].append(bayOwners[elemId])
+        elif elemType in ['TCSC', 'FSC', 'MSR', 'MSC', 'STATCOM']:
+            dbRows[rIter].append(compensatorOwners[elemId])
+        # convert row to tuple
         dbRows[rIter] = tuple(dbRows[rIter])
 
     return {'columns': colNames, 'rows': dbRows}

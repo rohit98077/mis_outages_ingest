@@ -13,6 +13,8 @@ def getOwnersForHvdcPoleIds(reportsConnStr: str, ids: List[int]) -> Dict[int, st
     Returns:
         Dict[int, str]: keys will be element Ids, values will be comma separated owner names
     """
+    if len(ids) == 0:
+        return {}
     # requiredIds in tuple list form
     reqIdsTxt = ','.join(tuple(set([str(x) for x in ids])))
 
