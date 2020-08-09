@@ -22,7 +22,7 @@ class TestFetchOutages(unittest.TestCase):
                          'CREATED_DATETIME', 'MODIFIED_DATETIME', 'SHUTDOWN_TAG', 'SHUTDOWN_TAG_ID',
                          'SHUTDOWN_TYPENAME', 'SHUT_DOWN_TYPE_ID', 'OUTAGE_REMARKS', 'REASON',
                          'REASON_ID', 'REVIVAL_REMARKS', 'REGION_ID', 'SHUTDOWNREQUEST_ID', 'OWNERS']
-        self.assertTrue(False in [(col in targetColumns)
-                                  for col in outages['columns']])
+        self.assertFalse(False in [(col in targetColumns)
+                                   for col in outages['columns']])
         self.assertFalse(len(outages['rows']) == 0)
         self.assertTrue(len(outages['rows'][0]) == len(targetColumns))
