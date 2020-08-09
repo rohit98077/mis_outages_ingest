@@ -29,7 +29,7 @@ def fetchOutages(appConfig: dict, startDate: dt.datetime, endDate: dt.datetime) 
         Outages: Each tuple will have the following attributes
         column names should be
         'PWC_ID', 'ELEMENT_ID', 'ELEMENT_NAME', 'ENTITY_ID', 'ENTITY_NAME', 
-        'INSTALLED_CAPACITY', 'OUTAGE_DATETIME', 'REVIVED_DATETIME', 
+        'CAPACITY', 'OUTAGE_DATETIME', 'REVIVED_DATETIME', 
         'CREATED_DATETIME', 'MODIFIED_DATETIME', 'SHUTDOWN_TAG', 
         'SHUTDOWN_TAG_ID', 'SHUTDOWN_TYPENAME', 'SHUT_DOWN_TYPE_ID', 
         'OUTAGE_REMARKS', 'REASON', 'REASON_ID', 'REVIVAL_REMARKS', 
@@ -43,7 +43,7 @@ def fetchOutages(appConfig: dict, startDate: dt.datetime, endDate: dt.datetime) 
 
     # sql query to fetch the outages
     outagesFetchSql = '''select rto.ID as pwc_id, rto.ELEMENT_ID,rto.ELEMENTNAME as ELEMENT_NAME,
-    rto.ENTITY_ID, ent_master.ENTITY_NAME, gen_unit.installed_capacity, rto.OUTAGE_DATE as OUTAGE_DATETIME, 
+    rto.ENTITY_ID, ent_master.ENTITY_NAME, gen_unit.installed_capacity as CAPACITY, rto.OUTAGE_DATE as OUTAGE_DATETIME, 
     rto.REVIVED_DATE as REVIVED_DATETIME, rto.CREATED_DATE as CREATED_DATETIME, 
     rto.MODIFIED_DATE as MODIFIED_DATETIME, sd_tag.name as shutdown_tag,rto.SHUTDOWN_TAG_ID, 
     sd_type.name as shutdown_typename,rto.SHUT_DOWN_TYPE as SHUT_DOWN_TYPE_ID, rto.OUTAGE_REMARKS, 

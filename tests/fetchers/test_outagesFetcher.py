@@ -18,7 +18,7 @@ class TestFetchOutages(unittest.TestCase):
 
         outages = fetchOutages(self.appConfig, startDate, endDate)
         targetColumns = ['PWC_ID', 'ELEMENT_ID', 'ELEMENT_NAME', 'ENTITY_ID',
-                         'ENTITY_NAME', 'INSTALLED_CAPACITY', 'OUTAGE_DATETIME', 'REVIVED_DATETIME',
+                         'ENTITY_NAME', 'CAPACITY', 'OUTAGE_DATETIME', 'REVIVED_DATETIME',
                          'CREATED_DATETIME', 'MODIFIED_DATETIME', 'SHUTDOWN_TAG', 'SHUTDOWN_TAG_ID',
                          'SHUTDOWN_TYPENAME', 'SHUT_DOWN_TYPE_ID', 'OUTAGE_REMARKS', 'REASON',
                          'REASON_ID', 'REVIVAL_REMARKS', 'REGION_ID', 'SHUTDOWNREQUEST_ID', 'OWNERS']
