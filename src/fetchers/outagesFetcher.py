@@ -4,6 +4,7 @@ import pandas as pd
 from typing import Dict
 from src.repos.outagesRepo import Outages
 from src.utils.timeUtils import getTimeDeltaFromDbStr
+from src.utils.stringUtils import extractVoltFromName
 from src.fetchers.acTransLineCktOwnersFetcher import getOwnersForAcTransLineCktIds
 from src.fetchers.bayOwnersFetcher import getOwnersForBayIds
 from src.fetchers.busOwnersFetcher import getOwnersForBusIds
@@ -68,6 +69,7 @@ def fetchOutages(appConfig: dict, startDate: dt.datetime, endDate: dt.datetime) 
     outDateIndexInRow: int = 6
     revDateIndexInRow: int = 7
     elemIdIndexInRow: int = 1
+    elemIdNameIndexInRow: int = 2
     elemTypeIndexInRow: int = 4
 
     # initialize owners dictionary
@@ -89,6 +91,7 @@ def fetchOutages(appConfig: dict, startDate: dt.datetime, endDate: dt.datetime) 
         dbRows[rIter] = list(dbRows[rIter])
 
         # get the element Id and element type of outage entry
+        elemName = dbRows[rIter][elemIdNameIndexInRow]
         elemId = dbRows[rIter][elemIdIndexInRow]
         elemType = dbRows[rIter][elemTypeIndexInRow]
         if elemType == 'AC_TRANSMISSION_LINE_CIRCUIT':
@@ -111,17 +114,16 @@ def fetchOutages(appConfig: dict, startDate: dt.datetime, endDate: dt.datetime) 
             busOwners[elemId] = ''
         elif elemType == 'Bay':
             bayOwners[elemId] = ''
-        elif elemType in ['TCSC', 'FSC', 'MSR', 'MSC', 'STATCOM']:
+        elif elemType in ['TCSC', 'MSR', 'MSC', 'STATCOM']:
             compensatorOwners[elemId] = ''
 
         # convert installed capacity to string
         instCap = dbRows[rIter][instCapIndexInRow]
-        if not pd.isnull(instCap):
+        if elemType == 'GENERATING_UNIT' and not(pd.isnull(instCap)):
             instCap = str(instCap)
-            dbRows[rIter][instCapIndexInRow] = instCap
-
-        # TODO if element type is not generating unit,
-        # then extract voltage level and assign to installed capacity
+        else:
+            instCap = extractVoltFromName(elemType, elemName)
+        dbRows[rIter][instCapIndexInRow] = instCap
 
         outageDateTime = dbRows[rIter][outDateIndexInRow]
         if not pd.isnull(outageDateTime):
@@ -205,7 +207,7 @@ def fetchOutages(appConfig: dict, startDate: dt.datetime, endDate: dt.datetime) 
             dbRows[rIter].append(busOwners[elemId])
         elif elemType == 'Bay':
             dbRows[rIter].append(bayOwners[elemId])
-        elif elemType in ['TCSC', 'FSC', 'MSR', 'MSC', 'STATCOM']:
+        elif elemType in ['TCSC', 'MSR', 'MSC', 'STATCOM']:
             dbRows[rIter].append(compensatorOwners[elemId])
         # convert row to tuple
         dbRows[rIter] = tuple(dbRows[rIter])

@@ -60,3 +60,39 @@ class TestStringUtils(unittest.TestCase):
         elemVoltLvl = extractVoltFromName(elemType, elemName)
         # print(elemVoltLvl)
         self.assertTrue(elemVoltLvl == '1200KV/400KV')
+    
+    def test_hvdcPole(self) -> None:
+        """tests extract voltage level from hvdc pole
+        """
+        elemType = 'HVDC POLE'
+        elemName = 'HVDC 500KV APL  POLE 1'
+        elemVoltLvl = extractVoltFromName(elemType, elemName)
+        # print(elemVoltLvl)
+        self.assertTrue(elemVoltLvl == '500KV')
+    
+    def test_bus(self) -> None:
+        """tests extract voltage level from bus
+        """
+        elemType = 'BUS'
+        elemName = 'ACBIL - 400KV - BUS 2'
+        elemVoltLvl = extractVoltFromName(elemType, elemName)
+        # print(elemVoltLvl)
+        self.assertTrue(elemVoltLvl == '400KV')
+    
+    def test_bay(self) -> None:
+        """tests extract voltage level from bay
+        """
+        elemType = 'Bay'
+        elemName = 'MAIN BAY - 765KV/400KV BHOPAL-ICT-1 AND BHOPAL - 765KV - BUS 2 at BHOPAL - 765KV'
+        elemVoltLvl = extractVoltFromName(elemType, elemName)
+        # print(elemVoltLvl)
+        self.assertTrue(elemVoltLvl == '765KV')
+    
+    def test_tcsc(self) -> None:
+        """tests extract voltage level from bay
+        """
+        elemType = 'TCSC'
+        elemName = 'AURANGABAD - 400KV - BUS 2 MSR@AURANGABAD'
+        elemVoltLvl = extractVoltFromName(elemType, elemName)
+        # print(elemVoltLvl)
+        self.assertTrue(elemVoltLvl == '400KV')
