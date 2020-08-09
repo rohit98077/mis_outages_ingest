@@ -95,8 +95,6 @@ def fetchOutages(appConfig: dict, startDate: dt.datetime, endDate: dt.datetime) 
             acTransLineCktOwners[elemId] = ''
         elif elemType == 'GENERATING_UNIT':
             genUnitOwners[elemId] = ''
-        elif elemType == 'GENERATING_UNIT':
-            genUnitOwners[elemId] = ''
         elif elemType == 'FSC':
             fscOwners[elemId] = ''
         elif elemType == 'HVDC_LINE_CIRCUIT':
@@ -189,8 +187,6 @@ def fetchOutages(appConfig: dict, startDate: dt.datetime, endDate: dt.datetime) 
         elemType = dbRows[rIter][elemTypeIndexInRow]
         if elemType == 'AC_TRANSMISSION_LINE_CIRCUIT':
             dbRows[rIter].append(acTransLineCktOwners[elemId])
-        elif elemType == 'GENERATING_UNIT':
-            dbRows[rIter].append(genUnitOwners[elemId])
         elif elemType == 'GENERATING_UNIT':
             dbRows[rIter].append(genUnitOwners[elemId])
         elif elemType == 'FSC':
