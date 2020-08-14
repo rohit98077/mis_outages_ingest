@@ -16,7 +16,7 @@ class TestHvdcLineCktOwnersFetcher(unittest.TestCase):
         """
         elemIds = [12, 13]
         ownersDict = getOwnersForHvdcLineCktIds(
-            self.appConfig['conStr'], elemIds)
+            self.appConfig['reportsConStr'], elemIds)
         expectedDict = {
             12: "POWERGRID-WR1 (PGCIL)", 13: "POWERGRID-SR,POWERGRID-WR1 (PGCIL)"}
         self.assertTrue(ownersDict == expectedDict)

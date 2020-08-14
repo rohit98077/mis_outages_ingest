@@ -16,6 +16,6 @@ class TestBayOwnersFetcher(unittest.TestCase):
         """
         elemIds = [35, 36]
         ownersDict = getOwnersForBayIds(
-            self.appConfig['conStr'], elemIds)
+            self.appConfig['reportsConStr'], elemIds)
         expectedDict = {35: "BDTCL-Sterlite", 36: "POWERGRID-WR2 (PGCIL)"}
         self.assertTrue(ownersDict == expectedDict)

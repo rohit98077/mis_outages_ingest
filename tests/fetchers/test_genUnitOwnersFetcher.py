@@ -15,6 +15,6 @@ class TestGenUnitOwnersFetcher(unittest.TestCase):
         generating units from reporting software
         """
         elemIds = [4, 6]
-        ownersDict = getOwnersForGenUnitIds(self.appConfig['conStr'], elemIds)
+        ownersDict = getOwnersForGenUnitIds(self.appConfig['reportsConStr'], elemIds)
         expectedDict = {4: "ATIL-Adani", 6: "ATIL-Adani"}
         self.assertTrue(ownersDict == expectedDict)

@@ -16,7 +16,7 @@ class TestCompensatorOwnersFetcher(unittest.TestCase):
         """
         elemIds = [19, 20]
         ownersDict = getOwnersForCompensatorIds(
-            self.appConfig['conStr'], elemIds)
+            self.appConfig['reportsConStr'], elemIds)
         expectedDict = {
             20: "POWERGRID-WR1 (PGCIL)", 19: "POWERGRID-WR2 (PGCIL)"}
         self.assertTrue(ownersDict == expectedDict)

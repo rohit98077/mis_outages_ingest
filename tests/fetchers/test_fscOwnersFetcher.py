@@ -16,7 +16,7 @@ class TestFscOwnersFetcher(unittest.TestCase):
         """
         elemIds = [2, 3]
         ownersDict = getOwnersForFscIds(
-            self.appConfig['conStr'], elemIds)
+            self.appConfig['reportsConStr'], elemIds)
         expectedDict = {
             2: "ATIL-Adani", 3: "POWERGRID-WR2 (PGCIL)"}
         self.assertTrue(ownersDict == expectedDict)

@@ -29,7 +29,7 @@ class OutagesRepo():
             bool: returns true if process is ok
         """
         # get connection with raw data table
-        conLocal = cx_Oracle.connect(self.localConStr, mode=cx_Oracle.SYSDBA)
+        conLocal = cx_Oracle.connect(self.localConStr)
 
         isInsertSuccess = True
         try:

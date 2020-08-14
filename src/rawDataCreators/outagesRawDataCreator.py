@@ -18,7 +18,7 @@ def createOutageEventsRawData(appConfig: dict, startDate: dt.datetime, endDate: 
         [bool]: returns True if succeded
     """
     # get the connection string of application db
-    localDbConStr = appConfig['localDb']
+    appDbConStr = appConfig['appDbConStr']
 
     # set batch size for scalability concerns
     fetchBatchNumDays = 10
@@ -33,7 +33,7 @@ def createOutageEventsRawData(appConfig: dict, startDate: dt.datetime, endDate: 
             batchEndDate = endDate
         
         # get the instance of outages repository
-        outagesRepo = OutagesRepo(localDbConStr)
+        outagesRepo = OutagesRepo(appDbConStr)
 
         # fetch outage events from reporting software db
         outages = fetchOutages(appConfig, batchStartDate, batchEndDate)

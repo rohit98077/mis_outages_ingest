@@ -16,7 +16,7 @@ class TestHvdcPoleOwnersFetcher(unittest.TestCase):
         """
         elemIds = [4, 5]
         ownersDict = getOwnersForHvdcPoleIds(
-            self.appConfig['conStr'], elemIds)
+            self.appConfig['reportsConStr'], elemIds)
         expectedDict = {
             5: "POWERGRID-WR1 (PGCIL)", 4: "ATIL-Adani"}
         self.assertTrue(ownersDict == expectedDict)

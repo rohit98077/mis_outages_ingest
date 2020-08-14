@@ -16,6 +16,6 @@ class TestTransformerOwnersFetcher(unittest.TestCase):
         """
         elemIds = [28, 31]
         ownersDict = getOwnersForTransformerIds(
-            self.appConfig['conStr'], elemIds)
+            self.appConfig['reportsConStr'], elemIds)
         expectedDict = {28: "Maharashtra", 31: "POWERGRID-WR2 (PGCIL)"}
         self.assertTrue(ownersDict == expectedDict)

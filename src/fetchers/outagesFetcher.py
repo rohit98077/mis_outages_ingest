@@ -37,7 +37,7 @@ def fetchOutages(appConfig: dict, startDate: dt.datetime, endDate: dt.datetime) 
         'REGION_ID', 'SHUTDOWNREQUEST_ID', 'OWNERS'
     """
     # get the reports connection string
-    reportsConnStr = appConfig['conStr']
+    reportsConnStr = appConfig['reportsConStr']
 
     # connect to reports database
     con = cx_Oracle.connect(reportsConnStr)

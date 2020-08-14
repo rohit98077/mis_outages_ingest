@@ -16,7 +16,7 @@ class TestLineReactorOwnersFetcher(unittest.TestCase):
         """
         elemIds = [63,65]
         ownersDict = getOwnersForLineReactorIds(
-            self.appConfig['conStr'], elemIds)
+            self.appConfig['reportsConStr'], elemIds)
         expectedDict = {
             63: "BDTCL-Sterlite", 65: "NTPC"}
         self.assertTrue(ownersDict == expectedDict)
