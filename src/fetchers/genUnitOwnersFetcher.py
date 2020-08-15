@@ -23,15 +23,15 @@ def getOwnersForGenUnitIds(reportsConnStr: str, ids: List[int]) -> Dict[int, str
     # sql to fetch unit owners
     fetchSql = '''SELECT gen_unit.id,
                     owner_details.owners
-                FROM generating_unit gen_unit
-                    LEFT JOIN generating_station gen_stn ON gen_stn.id = gen_unit.fk_generating_station
+                FROM REPORTING_WEB_UI_UAT.generating_unit gen_unit
+                    LEFT JOIN REPORTING_WEB_UI_UAT.generating_station gen_stn ON gen_stn.id = gen_unit.fk_generating_station
                     LEFT JOIN (
                         SELECT LISTAGG(own.owner_name, ',') WITHIN GROUP(
                                 ORDER BY owner_name
                             ) AS owners,
                             parent_entity_attribute_id AS element_id
-                        FROM entity_entity_reln ent_reln
-                            LEFT JOIN owner own ON own.id = ent_reln.child_entity_attribute_id
+                        FROM REPORTING_WEB_UI_UAT.entity_entity_reln ent_reln
+                            LEFT JOIN REPORTING_WEB_UI_UAT.owner own ON own.id = ent_reln.child_entity_attribute_id
                         WHERE ent_reln.child_entity = 'Owner'
                             AND ent_reln.parent_entity = 'GENERATING_STATION'
                             AND ent_reln.child_entity_attribute = 'OwnerId'

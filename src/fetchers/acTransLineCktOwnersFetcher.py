@@ -24,15 +24,15 @@ def getOwnersForAcTransLineCktIds(reportsConnStr: str, ids: List[int]) -> Dict[i
     # sql to fetch element owners
     fetchSql = '''select ckt.id as ckt_id,
                     owner_details.owners
-                from ac_transmission_line_circuit ckt
-                    left join ac_trans_line_master ac_line on ckt.line_id = ac_line.id
+                from REPORTING_WEB_UI_UAT.ac_transmission_line_circuit ckt
+                    left join REPORTING_WEB_UI_UAT.ac_trans_line_master ac_line on ckt.line_id = ac_line.id
                     left join (
                         select LISTAGG(own.owner_name, ',') WITHIN GROUP (
                                 ORDER BY owner_name
                             ) AS owners,
                             parent_entity_attribute_id as element_id
-                        from entity_entity_reln ent_reln
-                            left join owner own on own.id = ent_reln.child_entity_attribute_id
+                        from REPORTING_WEB_UI_UAT.entity_entity_reln ent_reln
+                            left join REPORTING_WEB_UI_UAT.owner own on own.id = ent_reln.child_entity_attribute_id
                         where ent_reln.CHILD_ENTITY = 'OWNER'
                             and ent_reln.parent_entity = 'AC_TRANSMISSION_LINE'
                             and ent_reln.CHILD_ENTITY_ATTRIBUTE = 'OwnerId'
