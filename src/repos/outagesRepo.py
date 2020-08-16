@@ -49,7 +49,7 @@ class OutagesRepo():
                 "delete from outage_events where PWC_ID=:1", pwcIds)
 
             # insert the raw data
-            ouatageEvntsInsSql = 'insert into outage_events({0}) values ({1})'.format(
+            ouatageEvntsInsSql = 'insert into mis_warehouse.outage_events({0}) values ({1})'.format(
                 ','.join(colNames), sqlPlceHldrsTxt)
 
             curLocal.executemany(ouatageEvntsInsSql, outages['rows'])

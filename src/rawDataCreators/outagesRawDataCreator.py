@@ -21,9 +21,11 @@ def createOutageEventsRawData(appConfig: dict, startDate: dt.datetime, endDate: 
     appDbConStr = appConfig['appDbConStr']
 
     # set batch size for scalability concerns
-    fetchBatchNumDays = 10
+    fetchBatchNumDays = 100
 
     currDate = startDate
+    
+    isRawDataInsSuccess = False
 
     while currDate <= endDate:
         batchStartDate = currDate
