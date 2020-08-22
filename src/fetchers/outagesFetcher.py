@@ -141,7 +141,7 @@ def fetchOutages(appConfig: dict, startDate: dt.datetime, endDate: dt.datetime) 
         revivalDateTime = dbRows[rIter][revDateIndexInRow]
         if not pd.isnull(revivalDateTime):
             # convert string to time delta
-            revTimeStr = dbRows[rIter][-2]
+            revTimeStr = dbRows[rIter][-1]
             revTimeDelta = getTimeDeltaFromDbStr(revTimeStr)
             # strip off hours and minute components
             revivalDateTime = revivalDateTime.replace(
