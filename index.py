@@ -30,8 +30,12 @@ args = parser.parse_args()
 startDate = dt.datetime.strptime(args.start_date, '%Y-%m-%d')
 endDate = dt.datetime.strptime(args.end_date, '%Y-%m-%d')
 
+print('startDate = {0}, endDate = {1}'.format(dt.datetime.strftime(
+    startDate, '%Y-%m-%d'), dt.datetime.strftime(endDate, '%Y-%m-%d')))
 # get application config
 appConfig = getConfig()
 
 # create outages raw data between start and end dates
 _ = createOutageEventsRawData(appConfig, startDate, endDate)
+
+print('raw outages data creation done...')
