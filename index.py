@@ -15,8 +15,8 @@ from src.appConfig import getConfig
 from src.rawDataCreators.outagesRawDataCreator import createOutageEventsRawData
 
 # get start and end dates from command line
-startDate = dt.datetime.now()
-endDate = startDate - dt.timedelta(days=8)
+endDate = dt.datetime.now()
+startDate = endDate - dt.timedelta(days=8)
 # get an instance of argument parser from argparse module
 parser = argparse.ArgumentParser()
 # setup firstname, lastname arguements
@@ -30,12 +30,18 @@ args = parser.parse_args()
 startDate = dt.datetime.strptime(args.start_date, '%Y-%m-%d')
 endDate = dt.datetime.strptime(args.end_date, '%Y-%m-%d')
 
+startDate = startDate.replace(hour=0, minute=0, second=0, microsecond=0)
+endDate = endDate.replace(hour=0, minute=0, second=0, microsecond=0)
 print('startDate = {0}, endDate = {1}'.format(dt.datetime.strftime(
     startDate, '%Y-%m-%d'), dt.datetime.strftime(endDate, '%Y-%m-%d')))
 # get application config
 appConfig = getConfig()
 
 # create outages raw data between start and end dates
-_ = createOutageEventsRawData(appConfig, startDate, endDate)
+isRawDataCreationSuccess = createOutageEventsRawData(
+    appConfig, startDate, endDate)
 
-print('raw outages data creation done...')
+if isRawDataCreationSuccess:
+    print('raw outages data creation done...')
+else:
+    print('raw outages data creation failure...')
