@@ -14,8 +14,13 @@ def getTimeDeltaFromDbStr(timeStr: str) -> dt.timedelta:
     if pd.isnull(timeStr):
         return dt.timedelta(seconds=0)
     elif not(':' in timeStr):
+        print('could parse time string {0}'.format(timeStr))
         return dt.timedelta(seconds=0)
     else:
-        timeSegs = timeStr.split(':')
-        timeSegs = timeSegs[0:2]
-        return dt.timedelta(hours=int(timeSegs[0]), minutes=int(timeSegs[1]))
+        try:
+            timeSegs = timeStr.split(':')
+            timeSegs = timeSegs[0:2]
+            return dt.timedelta(hours=int(timeSegs[0]), minutes=int(timeSegs[1]))
+        except:
+            print('could parse time string {0}'.format(timeStr))
+    return dt.timedelta(seconds=0)
