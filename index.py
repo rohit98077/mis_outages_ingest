@@ -16,7 +16,7 @@ from src.rawDataCreators.outagesRawDataCreator import createOutageEventsRawData
 
 # get start and end dates from command line
 endDate = dt.datetime.now()
-startDate = endDate - dt.timedelta(days=8)
+startDate = endDate - dt.timedelta(days=3)
 # get an instance of argument parser from argparse module
 parser = argparse.ArgumentParser()
 # setup firstname, lastname arguements
