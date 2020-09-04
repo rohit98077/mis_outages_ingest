@@ -35,7 +35,7 @@ def create_raw_outages():
     if isRawDataCreationSuccess:
         return jsonify({'message': 'raw data creation successful!!!', 'startDate': startDate, 'endDate': endDate})
     else:
-        return jsonify({'message': 'raw data creation was not success'}), 400
+        return jsonify({'message': 'raw data creation was not success'}), 500
 
 
 if __name__ == '__main__':
