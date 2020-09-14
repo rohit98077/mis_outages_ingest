@@ -25,7 +25,6 @@ def getOwnersForAcTransLineCktIds(reportsConnStr: str, ids: List[int]) -> Dict[i
     fetchSql = '''select ckt.id as ckt_id,
                     owner_details.owners
                 from REPORTING_WEB_UI_UAT.ac_transmission_line_circuit ckt
-                    left join REPORTING_WEB_UI_UAT.ac_trans_line_master ac_line on ckt.line_id = ac_line.id
                     left join (
                         select LISTAGG(own.owner_name, ',') WITHIN GROUP (
                                 ORDER BY owner_name
@@ -38,7 +37,7 @@ def getOwnersForAcTransLineCktIds(reportsConnStr: str, ids: List[int]) -> Dict[i
                             and ent_reln.CHILD_ENTITY_ATTRIBUTE = 'OwnerId'
                             and ent_reln.PARENT_ENTITY_ATTRIBUTE = 'Owner'
                         group by parent_entity_attribute_id
-                    ) owner_details on owner_details.element_id = ac_line.id
+                    ) owner_details on owner_details.element_id = ckt.id
                 where ckt.id in ({0})
     '''.format(reqIdsTxt)
     # get cursor for querying

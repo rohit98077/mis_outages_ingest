@@ -16,5 +16,5 @@ from REPORTING_WEB_UI_UAT.ac_transmission_line_circuit ckt
             and ent_reln.CHILD_ENTITY_ATTRIBUTE = 'OwnerId'
             and ent_reln.PARENT_ENTITY_ATTRIBUTE = 'Owner'
         group by parent_entity_attribute_id
-    ) owner_details on owner_details.element_id = ac_line.id
+    ) owner_details on owner_details.element_id = ckt.id
 where ckt.id in (27, 1)

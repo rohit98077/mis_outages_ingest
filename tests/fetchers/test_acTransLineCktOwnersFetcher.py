@@ -17,5 +17,5 @@ class TestAcTransLineOwnersFetcher(unittest.TestCase):
         elemIds = [1, 27]
         ownersDict = getOwnersForAcTransLineCktIds(
             self.appConfig['reportsConStr'], elemIds)
-        expectedDict = {1: "Maharashtra", 27: "Chattisgarh"}
+        expectedDict = {1: "Maharashtra", 27: "DUMMY"}
         self.assertTrue(ownersDict == expectedDict)
