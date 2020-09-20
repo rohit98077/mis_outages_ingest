@@ -120,7 +120,7 @@ def fetchOutages(appConfig: dict, startDate: dt.datetime, endDate: dt.datetime) 
 
         # convert installed capacity to string
         instCap = dbRows[rIter][instCapIndexInRow]
-        if elemType == 'GENERATING_UNIT':
+        if elemType == 'GENERATING_UNIT' and not(pd.isnull(instCap)):
             instCap = str(int(instCap))
         else:
             instCap = extractVoltFromName(elemType, elemName)
