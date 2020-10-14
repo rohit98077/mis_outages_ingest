@@ -2,7 +2,7 @@ import datetime as dt
 import cx_Oracle
 import pandas as pd
 from typing import Dict
-from src.repos.outagesRepo import Outages
+from src.typeDefs.outages import IOutages
 from src.utils.timeUtils import getTimeDeltaFromDbStr
 from src.utils.stringUtils import extractVoltFromName
 from src.fetchers.acTransLineCktOwnersFetcher import getOwnersForAcTransLineCktIds
@@ -18,7 +18,7 @@ from src.fetchers.lineReactorOwnersFetcher import getOwnersForLineReactorIds
 from src.fetchers.transformerOwnersFetcher import getOwnersForTransformerIds
 
 
-def fetchOutages(appConfig: dict, startDate: dt.datetime, endDate: dt.datetime) -> Outages:
+def fetchOutages(appConfig: dict, startDate: dt.datetime, endDate: dt.datetime) -> IOutages:
     """fetches outages from reports database
 
     Args:
@@ -27,7 +27,7 @@ def fetchOutages(appConfig: dict, startDate: dt.datetime, endDate: dt.datetime) 
         endDate (dt): end date
 
     Returns:
-        Outages: Each tuple will have the following attributes
+        IOutages: Each tuple will have the following attributes
         column names should be
         'PWC_ID', 'ELEMENT_ID', 'ELEMENT_NAME', 'ENTITY_ID', 'ENTITY_NAME', 
         'CAPACITY', 'OUTAGE_DATETIME', 'REVIVED_DATETIME', 

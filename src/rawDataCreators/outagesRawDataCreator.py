@@ -2,7 +2,7 @@ from src.fetchers.outagesFetcher import fetchOutages
 import datetime as dt
 import cx_Oracle
 from typing import List
-from src.repos.outagesRepo import OutagesRepo
+from src.repos.outages.outagesRepo import OutagesRepo
 
 
 def createOutageEventsRawData(appConfig: dict, startDate: dt.datetime, endDate: dt.datetime) -> bool:

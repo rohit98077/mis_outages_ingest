@@ -5,6 +5,7 @@ import datetime as dt
 from src.appConfig import getConfig
 from src.rawDataCreators.outagesRawDataCreator import createOutageEventsRawData
 from flask import Flask, request, jsonify
+from src.repos.outages.outagesRepo import OutagesRepo
 
 app = Flask(__name__)
 
@@ -21,7 +22,7 @@ def hello():
 
 
 @app.route('/raw_outages', methods=['POST'])
-def create_raw_outages():
+def createRawOutages():
     # get start and end dates from post request body
     reqData = request.get_json()
     try:
@@ -36,6 +37,63 @@ def create_raw_outages():
         return jsonify({'message': 'raw data creation successful!!!', 'startDate': startDate, 'endDate': endDate})
     else:
         return jsonify({'message': 'raw data creation was not success'}), 500
+
+
+@app.route('/transElOutages', methods=['GET'])
+def getTransElOutages():
+    # get start and end dates from request query parameters
+    try:
+        startDateStr = request.args.get('startDate', None, type=str)
+        endDateStr = request.args.get('endDate', None, type=str)
+        startDate = dt.datetime.strptime(startDateStr, '%Y-%m-%d')
+        endDate = dt.datetime.strptime(endDateStr, '%Y-%m-%d')
+    except Exception as ex:
+        return jsonify({'message': 'Unable to parse start and end dates of this request body'}), 400
+
+    # get the instance of outages repository
+    outagesRepo = OutagesRepo(appConfig['appDbConStr'])
+
+    # fetch outage events from reporting software db
+    outages = outagesRepo.getTransElOutages(startDate, endDate)
+    return jsonify({'message': 'Success!!!', 'data': outages, 'startDate': startDate, 'endDate': endDate})
+
+
+@app.route('/majorGenOutages', methods=['GET'])
+def getMajorGenOutages():
+    # get start and end dates from request query parameters
+    try:
+        startDateStr = request.args.get('startDate', None, type=str)
+        endDateStr = request.args.get('endDate', None, type=str)
+        startDate = dt.datetime.strptime(startDateStr, '%Y-%m-%d')
+        endDate = dt.datetime.strptime(endDateStr, '%Y-%m-%d')
+    except Exception as ex:
+        return jsonify({'message': 'Unable to parse start and end dates of this request body'}), 400
+
+    # get the instance of outages repository
+    outagesRepo = OutagesRepo(appConfig['appDbConStr'])
+
+    # fetch outage events from reporting software db
+    outages = outagesRepo.getMajorGenOutages(startDate, endDate)
+    return jsonify({'message': 'Success!!!', 'data': outages, 'startDate': startDate, 'endDate': endDate})
+
+
+@app.route('/longTimeUnrevForced', methods=['GET'])
+def getLongTimeUnrevivedForcedOutages():
+    # get start and end dates from request query parameters
+    try:
+        startDateStr = request.args.get('startDate', None, type=str)
+        endDateStr = request.args.get('endDate', None, type=str)
+        startDate = dt.datetime.strptime(startDateStr, '%Y-%m-%d')
+        endDate = dt.datetime.strptime(endDateStr, '%Y-%m-%d')
+    except Exception as ex:
+        return jsonify({'message': 'Unable to parse start and end dates of this request body'}), 400
+
+    # get the instance of outages repository
+    outagesRepo = OutagesRepo(appConfig['appDbConStr'])
+
+    # fetch outage events from reporting software db
+    outages = outagesRepo.getLongTimeUnrevivedForcedOutages(startDate, endDate)
+    return jsonify({'message': 'Success!!!', 'data': outages, 'startDate': startDate, 'endDate': endDate})
 
 
 if __name__ == '__main__':

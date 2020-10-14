@@ -1,10 +1,11 @@
-from typing import List, Tuple, TypedDict
 import cx_Oracle
-
-
-class Outages(TypedDict):
-    columns: List[str]
-    rows: List[Tuple]
+from src.repos.outages.getTransElOutages import getTransElOutages
+from src.repos.outages.getMajorGenOutages import getMajorGenUnitOutages
+from src.repos.outages.getLongTimeUnrevForcedOtgs import getLongTimeUnrevivedForcedOutages
+from src.typeDefs.outages import IOutages
+from src.typeDefs.outage import IOutage
+import datetime as dt
+from typing import List
 
 
 class OutagesRepo():
@@ -19,11 +20,11 @@ class OutagesRepo():
         """
         self.localConStr = dbConStr
 
-    def insertOutages(self, outages: Outages) -> bool:
+    def insertOutages(self, outages: IOutages) -> bool:
         """inserts outages into the app db
 
         Args:
-            outages (Outages): outages to be inserted
+            outages (IOutages): outages to be inserted
 
         Returns:
             bool: returns true if process is ok
@@ -66,3 +67,43 @@ class OutagesRepo():
                 curLocal.close()
             conLocal.close()
         return isInsertSuccess
+
+    def getTransElOutages(self, startDt: dt.datetime, endDt: dt.datetime) -> List[IOutage]:
+        """get transmission elements outages
+
+        Args:
+            startDt (dt.datetime): fetch window start time
+            endDt (dt.datetime): fetch window end time
+
+        Returns:
+            List[IOutage]: List of outages
+        """
+        outages = getTransElOutages(self.localConStr, startDt, endDt)
+        return outages
+
+    def getMajorGenOutages(self, startDt: dt.datetime, endDt: dt.datetime) -> List[IOutage]:
+        """get transmission elements outages
+
+        Args:
+            startDt (dt.datetime): fetch window start time
+            endDt (dt.datetime): fetch window end time
+
+        Returns:
+            List[IOutage]: List of outages
+        """
+        outages = getMajorGenUnitOutages(self.localConStr, startDt, endDt)
+        return outages
+
+    def getLongTimeUnrevivedForcedOutages(self, startDt: dt.datetime, endDt: dt.datetime) -> List[IOutage]:
+        """get Long Time Unrevived Forced Outages
+
+        Args:
+            startDt (dt.datetime): fetch window start time
+            endDt (dt.datetime): fetch window end time
+
+        Returns:
+            List[IOutage]: List of outages
+        """
+        outages = getLongTimeUnrevivedForcedOutages(
+            self.localConStr, startDt, endDt)
+        return outages
