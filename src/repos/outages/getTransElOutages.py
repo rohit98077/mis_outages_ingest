@@ -66,13 +66,13 @@ def getTransElOutages(conStr: str, startDt: dt.datetime, endDt: dt.datetime) -> 
         elName: str = row[elNameInd]
         owners: str = row[ownersInd]
         voltLvl: str = str(row[capInd])
-        outDateStr: str = dt.datetime.strftime(row[outDtInd], "%d-%m-%Y")
+        outDateStr: str = dt.datetime.strftime(row[outDtInd], "%Y-%m-%d")
         outTimeStr: str = dt.datetime.strftime(row[outDtInd], "%H:%M")
         revivalDateStr: str = 'Still out'
         revivalTimeStr: str = 'Still out'
         revivalDt = row[reviveDtInd]
         if not(revivalDt == None):
-            revivalDateStr = dt.datetime.strftime(revivalDt, "%d-%m-%Y")
+            revivalDateStr = dt.datetime.strftime(revivalDt, "%Y-%m-%d")
             revivalTimeStr = dt.datetime.strftime(revivalDt, "%H:%M")
         reason = row[reasonInd]
         remarks = row[remarksInd]

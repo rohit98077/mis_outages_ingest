@@ -77,7 +77,7 @@ def getMajorGenUnitOutages(conStr: str, startDt: dt.datetime, endDt: dt.datetime
         except:
             continue
         outageDt = row[outDtInd]
-        outDateStr: str = dt.datetime.strftime(outageDt, "%d-%m-%Y")
+        outDateStr: str = dt.datetime.strftime(outageDt, "%Y-%m-%d")
         outTimeStr: str = dt.datetime.strftime(outageDt, "%H:%M")
         revivalDateStr: str = 'Still out'
         revivalTimeStr: str = 'Still out'
@@ -89,7 +89,7 @@ def getMajorGenUnitOutages(conStr: str, startDt: dt.datetime, endDt: dt.datetime
                     continue
             except:
                 continue
-            revivalDateStr = dt.datetime.strftime(revivalDt, "%d-%m-%Y")
+            revivalDateStr = dt.datetime.strftime(revivalDt, "%Y-%m-%d")
             revivalTimeStr = dt.datetime.strftime(revivalDt, "%H:%M")
         reason = row[reasonInd]
         remarks = row[remarksInd]
