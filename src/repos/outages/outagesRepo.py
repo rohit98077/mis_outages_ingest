@@ -1,4 +1,5 @@
 import cx_Oracle
+from src.repos.outages.getOutages import getOutages
 from src.repos.outages.getTransElOutages import getTransElOutages
 from src.repos.outages.getMajorGenOutages import getMajorGenUnitOutages
 from src.repos.outages.getLongTimeUnrevForcedOtgs import getLongTimeUnrevivedForcedOutages
@@ -68,6 +69,19 @@ class OutagesRepo():
             conLocal.close()
         return isInsertSuccess
 
+    def getOutages(self, startDt: dt.datetime, endDt: dt.datetime) -> List[IOutage]:
+        """get outages
+
+        Args:
+            startDt (dt.datetime): fetch window start time
+            endDt (dt.datetime): fetch window end time
+
+        Returns:
+            List[IOutage]: List of outages
+        """
+        outages = getOutages(self.localConStr, startDt, endDt)
+        return outages
+
     def getTransElOutages(self, startDt: dt.datetime, endDt: dt.datetime) -> List[IOutage]:
         """get transmission elements outages
 
@@ -76,7 +90,7 @@ class OutagesRepo():
             endDt (dt.datetime): fetch window end time
 
         Returns:
-            List[IOutage]: List of outages
+            List[IOutage]: List of transmission element outages
         """
         outages = getTransElOutages(self.localConStr, startDt, endDt)
         return outages

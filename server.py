@@ -39,6 +39,25 @@ def createRawOutages():
         return jsonify({'message': 'raw data creation was not success'}), 500
 
 
+@app.route('/outages', methods=['GET'])
+def getOutages():
+    # get start and end dates from request query parameters
+    try:
+        startDateStr = request.args.get('startDate', None, type=str)
+        endDateStr = request.args.get('endDate', None, type=str)
+        startDate = dt.datetime.strptime(startDateStr, '%Y-%m-%d')
+        endDate = dt.datetime.strptime(endDateStr, '%Y-%m-%d')
+    except Exception as ex:
+        return jsonify({'message': 'Unable to parse start and end dates of this request body'}), 400
+
+    # get the instance of outages repository
+    outagesRepo = OutagesRepo(appConfig['appDbConStr'])
+
+    # fetch outage events from reporting software db
+    outages = outagesRepo.getOutages(startDate, endDate)
+    return jsonify({'message': 'Success!!!', 'data': outages, 'startDate': startDate, 'endDate': endDate})
+
+
 @app.route('/transElOutages', methods=['GET'])
 def getTransElOutages():
     # get start and end dates from request query parameters

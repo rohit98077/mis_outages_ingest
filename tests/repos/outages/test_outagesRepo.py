@@ -10,6 +10,14 @@ class TestOutagesRepo(unittest.TestCase):
         appDbConStr = appConfig['appDbConStr']
         self.outagesRepo = OutagesRepo(appDbConStr)
 
+    def test_getOutages(self) -> None:
+        """tests the outages fetching function
+        """
+        startDate = dt.datetime(2020, 8, 1)
+        endDate = dt.datetime(2020, 8, 12)
+        outages = self.outagesRepo.getOutages(startDate, endDate)
+        self.assertFalse(len(outages) == 0)
+    
     def test_getTransElOutages(self) -> None:
         """tests the transmission elements outages fetching function
         """
