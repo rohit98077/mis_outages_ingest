@@ -3,6 +3,7 @@ from typing import TypedDict
 
 class IOutage(TypedDict):
     elName: str
+    elType: str
     owners: str
     capacity: str
     outageDate: str

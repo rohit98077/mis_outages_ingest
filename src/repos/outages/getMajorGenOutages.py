@@ -101,6 +101,7 @@ def getMajorGenUnitOutages(conStr: str, startDt: dt.datetime, endDt: dt.datetime
         # create outage record
         outageObj: IOutage = {
             'elName': unitName,
+            'elType': "",
             'owners': owners,
             'capacity': cap,
             'outageDate': outDateStr,

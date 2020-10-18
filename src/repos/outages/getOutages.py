@@ -20,7 +20,7 @@ def getOutages(conStr: str, startDt: dt.datetime, endDt: dt.datetime) -> List[IO
     con = cx_Oracle.connect(conStr)
 
     # sql query to fetch the outages
-    outagesFetchSql = '''select oe.ELEMENT_NAME, 
+    outagesFetchSql = '''select oe.ELEMENT_NAME, ENTITY_NAME,
     oe.OWNERS, oe.CAPACITY,
     oe.OUTAGE_DATETIME, oe.REVIVED_DATETIME,
     oe.OUTAGE_REMARKS, oe.REASON, oe.shutdown_tag
@@ -37,7 +37,7 @@ def getOutages(conStr: str, startDt: dt.datetime, endDt: dt.datetime) -> List[IO
     cur = con.cursor()
     cur.execute(outagesFetchSql, (startDt, endDt))
     colNames = [row[0] for row in cur.description]
-    targetColumns = ['ELEMENT_NAME', 'OWNERS', 'CAPACITY',
+    targetColumns = ['ELEMENT_NAME', 'ENTITY_NAME', 'OWNERS', 'CAPACITY',
                      'OUTAGE_DATETIME', 'REVIVED_DATETIME', 'OUTAGE_REMARKS', 'REASON', 'SHUTDOWN_TAG']
     if (False in [(col in targetColumns) for col in colNames]):
         # all desired columns not fetched, hence return empty
@@ -51,6 +51,7 @@ def getOutages(conStr: str, startDt: dt.datetime, endDt: dt.datetime) -> List[IO
     outages: List[IOutage] = []
 
     elNameInd = colNames.index('ELEMENT_NAME')
+    elTypeInd = colNames.index('ENTITY_NAME')
     ownersInd = colNames.index('OWNERS')
     capInd = colNames.index('CAPACITY')
     outDtInd = colNames.index('OUTAGE_DATETIME')
@@ -62,6 +63,7 @@ def getOutages(conStr: str, startDt: dt.datetime, endDt: dt.datetime) -> List[IO
     # iterate through each row to populate result outage rows
     for row in dbRows:
         elName: str = row[elNameInd]
+        elType: str = row[elTypeInd]
         owners: str = row[ownersInd]
         voltLvl: str = str(row[capInd])
         outDateStr: str = dt.datetime.strftime(row[outDtInd], "%Y-%m-%d")
@@ -82,6 +84,7 @@ def getOutages(conStr: str, startDt: dt.datetime, endDt: dt.datetime) -> List[IO
         # create outage record
         outageObj: IOutage = {
             'elName': elName,
+            'elType': elType,
             'owners': owners,
             'capacity': voltLvl,
             'outageDate': outDateStr,
