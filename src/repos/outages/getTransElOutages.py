@@ -81,6 +81,8 @@ def getTransElOutages(conStr: str, startDt: dt.datetime, endDt: dt.datetime) -> 
         outageTag = row[outageTagInd]
         if outageTag == 'Outage':
             outageTag = None
+        if reason==outageTag:
+            reason=None
         reasonStr = ' / '.join([r for r in [outageTag, reason,
                                             remarks] if not(r == None)])
         # create outage record
